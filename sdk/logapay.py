@@ -71,7 +71,6 @@ class LogapayAPI:
         )
         status_code = response.status_code
         content_type = response.headers.get('Content-Type', "")
-        print(status_code, content_type)
         data = response.json()
         detail = data.get("detail") if "application/json" in content_type else ""
         
