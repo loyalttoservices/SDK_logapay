@@ -66,7 +66,26 @@ class LogapayAPI:
            
     
     def transfer(self, amount: float, receiver: str, desc: str = ""):
-        req = requests.post(self._transfer_url, 
-            data={"amount": amount, "receiver": receiver},
+        response = requests.post(self._transfer_url, 
+            json={"amount": amount, "receiver": receiver},
             headers=self.headers
         )
+        status_code = response.status_code
+        content_type = response.headers.get('Content-Type', "")
+        data = response.json()
+        detail = data.get("detail") if "application/json" in content_type else ""
+        
+        if status_code >= 400 and status_code <= 499:
+            _status_code = data.get("status", status_code)
+            if _status_code == 401:
+                raise NotAuthenticated(detail)
+            elif _status_code == 403:
+                raise NotAuthorized(detail)
+            else:
+                raise Exception(detail)
+        elif status_code >= 500 and status_code <= 599:
+            raise Exception(detail)
+        else:
+            return {
+                
+            }
