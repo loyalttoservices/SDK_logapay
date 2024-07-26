@@ -37,8 +37,7 @@ class LogapayAPI:
         self._transfer_url = LogapayAPI.BASE_ENDPOINT_TEST + "/v1/transfer"
         self.headers = {
             "Authorization": "token " + self._token,
-            "Content-Type": "application/json",
-            'Accept' :'application/json'
+            "Content-Type": "application/json"
         }
 
     def payment(self, amount:float, orderId: str):
@@ -67,11 +66,12 @@ class LogapayAPI:
     
     def transfer(self, amount: float, receiver: str, desc: str = ""):
         response = requests.post(self._transfer_url, 
-            json={"amount": amount, "receiver": receiver},
+            json={"amount": amount, "receiver": receiver, "description": desc},
             headers=self.headers
         )
         status_code = response.status_code
         content_type = response.headers.get('Content-Type', "")
+        print(status_code, content_type)
         data = response.json()
         detail = data.get("detail") if "application/json" in content_type else ""
         
@@ -86,6 +86,6 @@ class LogapayAPI:
         elif status_code >= 500 and status_code <= 599:
             raise Exception(detail)
         else:
-            return {
-                
-            }
+            return data
+        
+        
