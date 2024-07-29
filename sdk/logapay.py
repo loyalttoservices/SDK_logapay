@@ -2,17 +2,21 @@ import requests
 
 
 
-class NotAuthenticated(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
+class LogApayException(Exception):
+    pass
+
+
+class APINotAuthenticated(LogApayException):
+    pass
         
         
-class NotAuthorized(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args) 
+class APINotAuthorized(LogApayException):
+    pass
         
         
 class PaymentResponse:
+    """Payment reponse to be sent via payment method
+    """
     def __init__(self, data) -> None:
         self._data = data
         
@@ -25,7 +29,7 @@ class PaymentResponse:
     
 
 class LogapayAPI:
-    """_summary_
+    """LogApay SDK for interact with LogApi api.
     """
     BASE_ENDPOINT = "https://logapay.net"
     BASE_ENDPOINT_TEST = "http://localhost:8000"
@@ -53,13 +57,13 @@ class LogapayAPI:
         if status_code >= 400 and status_code <= 499:
             _status_code = data.get("status", status_code)
             if _status_code == 401:
-                raise NotAuthenticated(detail)
+                raise APINotAuthenticated(detail)
             elif _status_code == 403:
-                raise NotAuthorized(detail)
+                raise APINotAuthorized(detail)
             else:
                 raise Exception(detail)
         elif status_code >= 500 and status_code <= 599:
-            raise Exception(detail)
+            raise LogApayException(detail)
         else:
            return PaymentResponse(data=data)
            
@@ -77,13 +81,13 @@ class LogapayAPI:
         if status_code >= 400 and status_code <= 499:
             _status_code = data.get("status", status_code)
             if _status_code == 401:
-                raise NotAuthenticated(detail)
+                raise APINotAuthenticated(detail)
             elif _status_code == 403:
-                raise NotAuthorized(detail)
+                raise APINotAuthorized(detail)
             else:
                 raise Exception(detail)
         elif status_code >= 500 and status_code <= 599:
-            raise Exception(detail)
+            raise LogApayException(detail)
         else:
             return data
         
