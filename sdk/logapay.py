@@ -1,17 +1,7 @@
 import requests
 
+from exceptions import APINotAuthenticated, APINotAuthorized, LogApayException
 
-
-class LogApayException(Exception):
-    pass
-
-
-class APINotAuthenticated(LogApayException):
-    pass
-        
-        
-class APINotAuthorized(LogApayException):
-    pass
         
         
 class PaymentResponse:
@@ -61,7 +51,7 @@ class LogapayAPI:
             elif _status_code == 403:
                 raise APINotAuthorized(detail)
             else:
-                raise Exception(detail)
+                raise LogApayException(detail)
         elif status_code >= 500 and status_code <= 599:
             raise LogApayException(detail)
         else:
@@ -85,7 +75,7 @@ class LogapayAPI:
             elif _status_code == 403:
                 raise APINotAuthorized(detail)
             else:
-                raise Exception(detail)
+                raise LogApayException(detail)
         elif status_code >= 500 and status_code <= 599:
             raise LogApayException(detail)
         else:
