@@ -8,6 +8,29 @@ The LogapayAPI SDK is designed for interacting with the LogApay payment gateway 
 
 ## Classes
 
+
+### PaymentResponse
+
+Represents a response received from the LogApay API for payment.
+
+Methods
+
+Initializes the PaymentResponse with response data.
+
+- `__init__(self, data)`
+
+
+Retrieves the "response" field from the response data.
+
+- `get_response(self)`
+
+Returns a string representation of the response, specifically the "redirect_url" if available.
+
+- `__str__(self)`
+
+
+
+
 ### LogApayException
 
 Base exception class for all exceptions related to LogApay.
