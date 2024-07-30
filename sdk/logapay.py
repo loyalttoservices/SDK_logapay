@@ -25,10 +25,10 @@ class LogapayAPI:
     BASE_ENDPOINT_TEST = "http://localhost:8000"
     
     
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, debug=False) -> None:
         self._token = token
-        self._create_url = LogapayAPI.BASE_ENDPOINT_TEST + "/v1/create"
-        self._transfer_url = LogapayAPI.BASE_ENDPOINT_TEST + "/v1/transfer"
+        self._create_url = LogapayAPI.BASE_ENDPOINT_TEST if debug else LogapayAPI.BASE_ENDPOINT + "/v1/create"
+        self._transfer_url = LogapayAPI.BASE_ENDPOINT_TEST if debug else LogapayAPI.BASE_ENDPOINT + "/v1/transfer"
         self.headers = {
             "Authorization": "token " + self._token,
             "Content-Type": "application/json"
