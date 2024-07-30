@@ -62,7 +62,7 @@ Methods
 
 Initializes the LogapayAPI instance with an authentication token.
 
-- `__init__(self, token: str)`
+- `__init__(self, token: str, debug=False)`
 
 
 Creates a payment request.
