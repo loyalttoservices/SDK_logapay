@@ -10,7 +10,7 @@ The LogapayAPI SDK is designed for interacting with the LogApay payment gateway 
 
 - From github
 
-pip install git+https://github.com/loyalttoservices/SDK_logapay.git
+    - pip install git+https://github.com/loyalttoservices/SDK_logapay.git
 
 
 ## Classes
