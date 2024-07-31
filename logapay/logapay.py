@@ -1,6 +1,6 @@
 import requests
 
-from exceptions import APINotAuthenticated, APINotAuthorized, LogApayException
+from logapay.exceptions import APINotAuthenticated, APINotAuthorized, LogApayException
 
         
         

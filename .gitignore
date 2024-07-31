@@ -34,3 +34,8 @@ venv.bak/
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+
+
+dist
+build
+**.egg-info

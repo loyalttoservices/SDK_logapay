@@ -1,16 +1,24 @@
+Metadata-Version: 2.1
+Name: logapay
+Version: 1.0.0
+Summary: LogapayAPI SDK is designed for interacting with the LogApay.
+Home-page: https://github.com/loyalttoservices/SDK_logapay
+Author: bogosla
+Author-email: loyalttoservices@gmail.com
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
 
 
 
 ## Overview
 
 The LogapayAPI SDK is designed for interacting with the LogApay payment gateway API. It provides methods to perform payment creation and money transfer operation.
-
-
-### Installation
-
-- From github
-
-pip install git+https://github.com/loyalttoservices/SDK_logapay.git
 
 
 ## Classes
@@ -118,8 +126,7 @@ Transfers money to a receiver.
 
 
 ```
-from logapay.exceptions import *
-from logapay.logapay import LogapayAPI
+from sdk.exceptions import *
 
 # Initialize the API client with your token
 api_client = LogapayAPI(token="your_api_token")
