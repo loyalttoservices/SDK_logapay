@@ -114,6 +114,29 @@ Transfers money to a receiver.
         - LogApayException: For server errors (500-599 status codes).
 
 
+Retrieve Transaction Details.
+
+- `retrievePayment(self, moncashId=None, moncashOrderId=None, transactionId=None):`
+
+    - Parameters:
+
+        - moncashOrderId (optional): The Moncash Order ID to retrieve transaction details (request moncash directly).
+        - moncashId (optional): The Moncash ID to retrieve transaction detail (request moncash directly).
+        - transactionId (optional): transaction ID to retrieve transaction details.
+
+
+    - Returns:
+
+        - dict: The response data from the API if the request is successful.
+        ```{'path': '/Api/v1/RetrieveTransactionPayment', 'payment': {'reference': 'xxxxxxx', 'transactionId': 'xxxxxx', 'cost': 50, 'message': 'successful', 'payer': '509xxxxxx'}, 'timestamp': 1722538220300, 'status': 200}```
+
+    - Raises:
+
+        - APINotAuthenticated: If the authentication fails (401 status code).
+        - APINotAuthorized: If authorization fails (403 status code).
+        - LogApayException: For server errors (500-599 status codes).
+
+
 ### Usage Example
 
 
