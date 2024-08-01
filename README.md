@@ -124,6 +124,8 @@ Retrieve Transaction Details.
         - moncashId (optional): The Moncash ID to retrieve transaction detail (request moncash directly).
         - transactionId (optional): transaction ID to retrieve transaction details.
 
+    _note: if all parameters provided. `moncashId` is checked first, `moncashOrderId`, `transactionId`._
+
 
     - Returns:
 
