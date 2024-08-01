@@ -14,7 +14,7 @@ class PaymentResponse:
         return self._data.get("response", {})
     
     def __str__(self) -> str:
-        return f"Response => {self._data.get("redirect_url", "")}"
+        return "Response => " + self._data.get('redirect_url', '')
     
     
 
@@ -24,26 +24,34 @@ class LogapayAPI:
     BASE_ENDPOINT = "https://logapay.net"
     BASE_ENDPOINT_TEST = "http://localhost:8000"
     
+    TRANSFER_URL = "/v1/transfer"
+    CREATE_URL ="/v1/create"
+    
     
     def __init__(self, token: str, debug=False) -> None:
         self._token = token
-        self._create_url = LogapayAPI.BASE_ENDPOINT_TEST if debug else LogapayAPI.BASE_ENDPOINT + "/v1/create"
-        self._transfer_url = LogapayAPI.BASE_ENDPOINT_TEST if debug else LogapayAPI.BASE_ENDPOINT + "/v1/transfer"
+        self._base = LogapayAPI.BASE_ENDPOINT_TEST if debug else LogapayAPI.BASE_ENDPOINT
         self.headers = {
             "Authorization": "token " + self._token,
             "Content-Type": "application/json"
         }
+        
 
     def payment(self, amount:float, orderId: str):
-        response = requests.post(self._create_url, 
+        response = requests.post(self._base + self.CREATE_URL, 
             json={"amount": amount, "orderId": orderId},
             headers=self.headers
         )
         status_code = response.status_code
         content_type = response.headers.get('Content-Type', "")
-        data = response.json()
-        detail = data.get("detail") if "application/json" in content_type else ""
         
+        if "application/json" in content_type:
+            data = response.json()
+        else:
+            data = {"status": status_code, "detail": response.text}
+        
+        detail = data.get("detail", "")
+            
         if status_code >= 400 and status_code <= 499:
             _status_code = data.get("status", status_code)
             if _status_code == 401:
@@ -55,19 +63,26 @@ class LogapayAPI:
         elif status_code >= 500 and status_code <= 599:
             raise LogApayException(detail)
         else:
-           return PaymentResponse(data=data)
+            return PaymentResponse(data=data)
+
+        
            
     
     def transfer(self, amount: float, receiver: str, desc: str = ""):
-        response = requests.post(self._transfer_url, 
-            json={"amount": amount, "receiver": receiver, "description": desc},
+        response = requests.post(self._base + self.TRANSFER_URL, 
+            json={"amount": amount, "receiver": receiver, "desc": desc},
             headers=self.headers
         )
         status_code = response.status_code
         content_type = response.headers.get('Content-Type', "")
-        data = response.json()
-        detail = data.get("detail") if "application/json" in content_type else ""
         
+        if "application/json" in content_type:
+            data = response.json()
+        else:
+            data = {"status": status_code, "detail": response.text}
+        
+        detail = data.get("detail", "")
+            
         if status_code >= 400 and status_code <= 499:
             _status_code = data.get("status", status_code)
             if _status_code == 401:
