@@ -179,3 +179,147 @@ except Exception as e:
 
 
 
+
+
+# Endpoints
+
+---
+
+## 📤 POST `v1/create`
+
+Initiates a payment request.
+
+### Request Body
+
+```json
+{
+    "amount": 50.0,
+    "orderId": "ORD123456"
+}
+```
+
+### Response — 202 Accepted
+```json
+{
+  "redirect_url": "https://moncash.url/to/payment",
+  "response": {
+    "debug": "...",
+    "order_id": "ORD123456",
+    "token": "...",
+    "amount": "...",
+    "token_details": {
+
+    },
+    "timestamp": "...",
+    "status": "..."
+  }
+}
+```
+
+### Errors — 400 Bad Request
+
+1. The transaction already exists.
+
+2. Validation fails.
+
+```json
+{
+    "detail": "...",
+}
+```
+
+
+## POST `v1/transfer`
+
+Transfers funds to a receiver using Moncash.
+
+```json
+{
+  "amount": 10.0,
+  "receiver": "509XXXXXXXX",
+  "desc": "Optional description"
+}
+```
+
+### Response — 200 OK
+```json
+{
+  "status": 200,
+  "amount": 10.0,
+  "message": "Transfer successful",
+  "response": {
+    "transfer_details":{
+        "transaction_id": "...",
+        "amount": "...",
+        "receiver_number": "...",
+        "description": "...",
+    },
+    "message": "...",
+    "timestamp": "...",
+    "status": "...",
+  }
+}
+```
+
+
+### Errors — 400 Bad Request
+
+1. Insufficient funds (prefund too low).
+
+2. Moncash API error.
+
+3. Validation errors.
+
+```json
+{
+    "...": "...",
+    "status": "..."
+}
+```
+
+
+
+## 📦 GET `/v1/RetrieveOrderPayment`
+
+Fetches a transaction's status via different identifiers.
+
+Query Parameters (At least one required)
+
+. moncashOrderId
+
+. transactionId
+
+. moncashId
+
+### Response — 200 OK
+
+```json
+{
+    "path": "/v1/RetrieveOrderPayment", 
+    "payment": {
+        "reference": "...", 
+        "transactionId": "...", 
+        "cost": "...", 
+        "message": "...", 
+        "payer": "..."
+    }, 
+    "timestamp": "...", 
+    "status": "..."
+}
+```
+
+#### Errors, 400 Bad Request or 404 Not Found if:
+
+No valid identifier is provided
+
+Transaction not found
+
+```json
+{
+    "detail": "...",
+    "status": "..."
+}
+```
+
+
+
