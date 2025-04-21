@@ -183,6 +183,9 @@ except Exception as e:
 
 # Endpoints
 
+All endpoint need authentication
+
+*Authorization:* *`token [token_provided]` header must be added*
 ---
 
 ## 📤 POST `v1/create`
