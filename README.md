@@ -324,5 +324,108 @@ Transaction not found
 }
 ```
 
+## Endpoints REST
+
+## Authentification
+
+Toutes les requêtes nécessitent un header d'autorisation :
+
+```http
+Authorization: token YOUR_API_KEY
+Content-Type: application/json
+```
+
+### 1. Créer un paiement
+
+**POST** `/v1/create`
+
+Crée une demande de paiement et retourne une URL de redirection.
+
+#### Requête JSON
+```json
+{
+  "amount": 100.0,
+  "orderId": "ABC123XYZ"
+}
+```
+
+#### Réponse JSON
+```json
+{
+  "status": 200,
+  "response": {
+    "payment_id": "xyz987",
+    "redirect_url": "https://logapay.net/pay/xyz987"
+  }
+}
+```
+
+---
+
+### 2. Effectuer un transfert
+
+**POST** `/v1/transfer`
+
+Permet de transférer un montant vers un autre compte.
+
+#### Requête JSON
+```json
+{
+  "amount": 150.0,
+  "receiver": "50938123456",
+  "desc": "Paiement de service"
+}
+```
+
+#### Réponse JSON
+```json
+{
+  "status": 200,
+  "message": "Transfer completed successfully",
+  "transaction_id": "TX123456"
+}
+```
+
+---
+
+### 3. Rechercher un paiement
+
+**GET** `/v1/RetrieveOrderPayment`
+
+Récupère les informations d’un paiement en fonction de l’un des identifiants.
+
+#### Paramètres URL (au moins un requis)
+- `moncashId`
+- `moncashOrderId`
+- `transactionId`
+
+#### Exemple
+```
+GET /v1/RetrieveOrderPayment?transactionId=TX123456
+```
+
+#### Réponse JSON
+```json
+{
+  "status": 200,
+  "payment_status": "SUCCESS",
+  "amount": 100.0,
+  "payer": "50938123456"
+}
+```
+
+---
+
+## Codes d’erreurs courants
+
+| Code | Signification            |
+|------|--------------------------|
+| 401  | Non authentifié          |
+| 403  | Non autorisé             |
+| 400  | Mauvaise requête         |
+| 500  | Erreur serveur interne   |
+
+---
+
 
 
