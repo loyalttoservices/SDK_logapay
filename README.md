@@ -182,6 +182,11 @@ except Exception as e:
 
 
 # Endpoints
+Base URL production:
+
+```arduino
+https://logapay.net
+```
 
 All endpoint need authentication
 
