@@ -25,7 +25,9 @@ class LogapayAPI:
     TRANSFER_URL = "/v1/transfer"
     CREATE_URL = "/v1/create"
     RETRIEVORDERPAYMENT_URL = "/v1/RetrieveOrderPayment"
-
+    LIST_TRANSACTION_URL="/v1/list-transactions"
+    PREFUND_LIST="/v1/list-prefund"
+    APPLICATION="/v1/application"
     def __init__(self, token: str, debug=False) -> None:
         self._token = token
         self._base = (
@@ -136,3 +138,152 @@ class LogapayAPI:
             raise LogApayException(detail)
         else:
             return data
+
+
+
+    def getTransactionsByDateRange(self, start_date=None, end_date=None, 
+                             transaction_type=None, phone_number=None):
+        """
+        Récupère les transactions dans une plage de dates avec des filtres optionnels
+        """
+        # Validation des paramètres
+        if not start_date and not end_date:
+            raise LogApayException("Au moins une date (start_date ou end_date) doit être fournie")
+        
+        params = {}
+        if start_date:
+            params['start_date'] = start_date
+        if end_date:
+            params['end_date'] = end_date
+        
+        if transaction_type:
+            params['type'] = transaction_type
+        if phone_number:
+            params['number'] = phone_number
+        
+        try:
+            response = requests.get(
+                self._base + self.LIST_TRANSACTION_URL,
+                params=params,
+                headers=self.headers,
+               
+            )
+            
+            # Gestion de la réponse
+            status_code = response.status_code
+            content_type = response.headers.get("Content-Type", "")
+            
+            if "application/json" in content_type:
+                data = response.json()
+            else:
+                data = {"status": status_code, "detail": response.text}
+            
+            if status_code >= 400:
+                detail = data.get("detail", "Erreur inconnue")
+                if status_code == 401:
+                    raise APINotAuthenticated(detail)
+                elif status_code == 403:
+                    raise APINotAuthorized(detail)
+                else:
+                    raise LogApayException(detail)
+            
+            return data
+        
+        except requests.exceptions.RequestException as e:
+            raise LogApayException(f"Erreur réseau: {str(e)}")
+        except ValueError as e:
+            raise LogApayException(f"Erreur de parsing JSON: {str(e)}")
+        
+
+
+    def getPrefundsByDateRange(self, start_date=None, end_date=None):
+        """
+        Récupère les prefunds dans une plage de dates avec des filtres optionnels
+        
+        """
+        # Validation des paramètres minimum
+        if not start_date and not end_date:
+            raise LogApayException("Au moins une date (start_date ou end_date) doit être fournie")
+
+        params = {}
+        if start_date:
+            params['start_date'] = start_date
+        if end_date:
+            params['end_date'] = end_date
+        
+
+        try:
+            response = requests.get(
+                self._base + self.PREFUND_LIST,  # Adaptez l'URL à votre endpoint
+                params=params,
+                headers=self.headers
+               
+            )
+            
+            # Gestion de la réponse
+            status_code = response.status_code
+            content_type = response.headers.get("Content-Type", "")
+
+            if "application/json" in content_type:
+                data = response.json()
+            else:
+                data = {"status": status_code, "detail": response.text}
+
+            if status_code >= 400:
+                detail = data.get("detail", "Erreur inconnue")
+                if status_code == 401:
+                    raise APINotAuthenticated(detail)
+                elif status_code == 403:
+                    raise APINotAuthorized(detail)
+                else:
+                    raise LogApayException(detail)
+            
+            return data
+
+        except requests.exceptions.RequestException as e:
+            raise LogApayException(f"Erreur réseau: {str(e)}")
+        except ValueError as e:
+            raise LogApayException(f"Erreur de parsing JSON: {str(e)}")
+
+
+
+    def getApplicationDetails(self, include_transactions=True):
+        """
+        Récupère les détails de l'application associée, y compris les statistiques et transactions récentes
+    """
+        try:
+            params = {
+                'include_transactions': str(include_transactions).lower()
+            }
+            
+            response = requests.get(
+                self._base + "/api/applications/details/",
+                params=params,
+                headers=self.headers,
+               
+            )
+            
+            # Gestion de la réponse
+            status_code = response.status_code
+            content_type = response.headers.get("Content-Type", "")
+
+            if "application/json" in content_type:
+                data = response.json()
+            else:
+                data = {"status": status_code, "detail": response.text}
+
+            if status_code >= 400:
+                detail = data.get("detail", "Erreur inconnue")
+                if status_code == 401:
+                    raise APINotAuthenticated(detail)
+                elif status_code == 403:
+                    raise APINotAuthorized(detail)
+                else:
+                    raise LogApayException(detail)
+            
+            return data
+
+        except requests.exceptions.RequestException as e:
+            raise LogApayException(f"Erreur réseau: {str(e)}")
+        except ValueError as e:
+            raise LogApayException(f"Erreur de parsing JSON: {str(e)}")
