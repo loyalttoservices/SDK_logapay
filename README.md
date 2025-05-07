@@ -571,7 +571,7 @@ v1/list-prefund?start_date=2025-05-04&end_date=2025-05-05
     "prefunds": [
         {
             "id": 21,
-            "app": app_id,
+            "app": "app_id",
             "amountInitial": 0.0,
             "amount": 0.0,
             "reference": "THE TOKEN",
@@ -584,7 +584,8 @@ v1/list-prefund?start_date=2025-05-04&end_date=2025-05-05
         "total_amount_initial": "0.0",
         "total_prefunds": 1
     }
-}```
+}
+```
 ---
 ## Codes d’erreurs courants
 
