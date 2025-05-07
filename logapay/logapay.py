@@ -257,7 +257,7 @@ class LogapayAPI:
             }
             
             response = requests.get(
-                self._base + "/api/applications/details/",
+                self._base + self.APPLICATION,
                 params=params,
                 headers=self.headers,
                
