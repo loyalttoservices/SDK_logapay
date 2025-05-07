@@ -175,6 +175,67 @@ except LogApayException as e:
 except Exception as e:
     print(f"General error: {e}")
 
+
+try:
+    # Test pour les transactions 
+    transactions = api_client.getTransactionsByDateRange(
+        start_date="2025-05-04",
+        end_date="2025-05-05",
+        transaction_type="Deposit",
+        
+    )  
+    print("Succès ! Résultats :")
+    print(transactions)
+
+except APINotAuthenticated:
+    print("Authentication failed.")
+except APINotAuthorized:
+    print("Authorization failed.")
+except LogApayException as e:
+    print(f"API error: {e}")
+except Exception as e:
+    print(f"General error: {e}")
+
+
+
+try:
+    # Test Prefunds
+    prefunds_data = api_client.getPrefundsByDateRange(
+        start_date="2025-05-04",
+        end_date="2025-05-05",
+       )
+    print("Rapport Prefunds réussi :")
+    print(f"Total prefunds: {prefunds_data['totals']['total_prefunds']}")
+    
+
+except APINotAuthenticated:
+    print("Authentication failed.")
+except APINotAuthorized:
+    print("Authorization failed.")
+except LogApayException as e:
+    print(f"API error: {e}")
+except Exception as e:
+    print(f"General error: {e}")
+
+
+
+try:
+    # Cas application - 
+    app_details = api_client.getApplicationDetails()
+    
+    print("Détails application récupérés avec succès :")
+    print('app_details',app_details)
+
+except APINotAuthenticated:
+    print("Authentication failed.")
+except APINotAuthorized:
+    print("Authorization failed.")
+except LogApayException as e:
+    print(f"API error: {e}")
+except Exception as e:
+    print(f"General error: {e}")
+
+
 ```
 
 
