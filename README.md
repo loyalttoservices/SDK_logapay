@@ -269,89 +269,6 @@ Transfers funds to a receiver using Moncash.
 }
 ```
 ---
-### 2. Rechercher la liste des transaction
-**GET** `/v1/list-transactions`
-
-Récupère les transactions par trie.
-#### Paramètres URL (au moins un requis)
-- `start_date`
-- `end_date`
-- `type :Deposit or Retrait `
-- number
-#### exemple 
-```
-v1/list-transactions?start_date=2025-05-04&end_date=2025-05-05&type=Deposit&number=34353637
-```
-#### Reponse JSON
-```json
-{
-    "business_name": "TEST",
-    "start_date": "2025-05-04",
-    "end_date": "2025-05-05",
-    "total_transactions": 1,
-    "total_withdrawals": 0,
-    "total_deposits": 1,
-    "total_amount_withdrawal": 0.0,
-    "total_amount_deposit": 0.0,
-    "total_amount_transaction": 0.0,
-    "transactions": [
-        {
-            "id": 0000,
-            "type_transaction": "DEPOSIT",
-            "reference": "MCW-XXXXXX",
-            "transaction_id": "XXXXXXX",
-            "amount": "10.00",
-            "phone_number": "50934353637",
-            "status_code": 200,
-            "message": "successful",
-            "date": "2025-05-04T12:35:39.470533-04:00",
-            "status": "SUCCESS"
-        }
-    ],
-    "application": {
-        "id": ,
-        "name": "NAME_APP",
-        "prefund": 0.0,
-        "token": "",
-        "compte_a_recevoir": 0.0
-    }
-}
-```
----
-
-### 2. Rechercher la liste des transaction
-**GET** `/v1/list-prefund`
-
-Récupère les transactions par trie.
-#### Paramètres URL
-- `start_date`
-- `end_date`
-
-#### exemple 
-```
-v1/list-prefund?start_date=2025-05-04&end_date=2025-05-05
-```
-#### Reponse JSON
-```json
-{
-    "prefunds": [
-        {
-            "id": 21,
-            "app": app_id,
-            "amountInitial": 0.0,
-            "amount": 0.0,
-            "reference": "THE TOKEN",
-            "date": "2025-05-05T16:22:16-04:00",
-            "fise": 5
-        }
-    ],
-    "totals": {
-        "total_amount": "0.0",
-        "total_amount_initial": "0.0",
-        "total_prefunds": 1
-    }
-}```
----
 ### Errors — 400 Bad Request
 
 1. Insufficient funds (prefund too low).
@@ -366,7 +283,7 @@ v1/list-prefund?start_date=2025-05-04&end_date=2025-05-05
     "status": "..."
 }
 ```
-
+---
 
 
 ## 📦 GET `/v1/RetrieveOrderPayment`
@@ -523,7 +440,91 @@ GET /v1/RetrieveOrderPayment?transactionId=TX123456
     ]
 }
 ```
+---
+---
+### 2. Rechercher la liste des transaction
+**GET** `/v1/list-transactions`
 
+Récupère les transactions par trie.
+#### Paramètres URL (au moins un requis)
+- `start_date`
+- `end_date`
+- `type :Deposit or Retrait `
+- number
+#### exemple 
+```
+v1/list-transactions?start_date=2025-05-04&end_date=2025-05-05&type=Deposit&number=34353637
+```
+#### Reponse JSON
+```json
+{
+    "business_name": "TEST",
+    "start_date": "2025-05-04",
+    "end_date": "2025-05-05",
+    "total_transactions": 1,
+    "total_withdrawals": 0,
+    "total_deposits": 1,
+    "total_amount_withdrawal": 0.0,
+    "total_amount_deposit": 0.0,
+    "total_amount_transaction": 0.0,
+    "transactions": [
+        {
+            "id": 0000,
+            "type_transaction": "DEPOSIT",
+            "reference": "MCW-XXXXXX",
+            "transaction_id": "XXXXXXX",
+            "amount": "10.00",
+            "phone_number": "50934353637",
+            "status_code": 200,
+            "message": "successful",
+            "date": "2025-05-04T12:35:39.470533-04:00",
+            "status": "SUCCESS"
+        }
+    ],
+    "application": {
+        "id": ,
+        "name": "NAME_APP",
+        "prefund": 0.0,
+        "token": "",
+        "compte_a_recevoir": 0.0
+    }
+}
+```
+---
+
+### 2. Rechercher la liste des Prefunds
+**GET** `/v1/list-prefund`
+
+Récupère les transactions par trie.
+#### Paramètres URL
+- `start_date`
+- `end_date`
+
+#### exemple 
+```
+v1/list-prefund?start_date=2025-05-04&end_date=2025-05-05
+```
+#### Reponse JSON
+```json
+{
+    "prefunds": [
+        {
+            "id": 21,
+            "app": app_id,
+            "amountInitial": 0.0,
+            "amount": 0.0,
+            "reference": "THE TOKEN",
+            "date": "2025-05-05T16:22:16-04:00",
+            "fise": 5
+        }
+    ],
+    "totals": {
+        "total_amount": "0.0",
+        "total_amount_initial": "0.0",
+        "total_prefunds": 1
+    }
+}```
+---
 ## Codes d’erreurs courants
 
 | Code | Signification            |
