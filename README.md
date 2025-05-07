@@ -420,6 +420,27 @@ GET /v1/RetrieveOrderPayment?transactionId=TX123456
 ```
 
 ---
+# GET APP'S DATA 
+## 📤 GET `v1/application`
+```
+    {
+    "applications": [
+        {
+            "id": ,
+            "name": "...",
+            "prefund": ...,
+            "token": "",
+            "compte_a_recevoir": 0.0,
+            "total_deposits": 0,
+            "total_withdrawals": 0,
+            "total_transactions": 0,
+            "account_prefound": 0.0,
+            "account_a_recevoir": 0.0,
+            "last_5_transactions": []
+        }
+    ]
+}
+```
 
 ## Codes d’erreurs courants
 
