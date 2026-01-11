@@ -11,6 +11,7 @@ The LogapayAPI SDK is designed for interacting with the LogApay payment gateway 
 - From github
 
     - pip install git+https://github.com/loyalttoservices/SDK_logapay.git
+    - pip install --upgrade git+https://github.com/loyalttoservices/SDK_logapay.git
 
 
 ## Classes
@@ -63,7 +64,7 @@ Exception raised when the API authorization fails.
 
 ### LogapayAPI
 
-Main class for interacting with the LogApay API. for now only support `MONCASH`
+Main class for interacting with the LogApay API. For now only supports `moncash`.
 
 Methods
 
@@ -74,12 +75,13 @@ Initializes the LogapayAPI instance with an authentication token.
 
 Creates a payment request.
 
-- `payment(self, amount: float, orderId: str)`
+- `payment(self, amount: float, orderId: str, method: str = "moncash")`
 
     - Parameters:
 
         - amount (float): The amount to be paid.
         - orderId (str): The unique identifier for the order.
+        - method (str, optional): Payment method to use. Defaults to `moncash`.
 
     - Returns:
 
@@ -95,13 +97,14 @@ Creates a payment request.
 
 Transfers money to a receiver.
 
-- `transfer(self, amount: float, receiver: str, desc: str = "")`
+- `transfer(self, amount: float, receiver: str, desc: str = "", method: str = "moncash")`
 
     - Parameters:
 
         - amount (float): The amount to be transferred.
         - receiver (str): The recipient's identifier.
         - desc (str, optional): Description for the transfer.
+        - method (str, optional): Payment method to use. Defaults to `moncash`.
 
     - Returns:
 
@@ -138,6 +141,67 @@ Retrieve Transaction Details.
         - APINotAuthorized: If authorization fails (403 status code).
         - LogApayException: For server errors (500-599 status codes).
 
+Retrieve Transactions by Date Range.
+
+- `getTransactionsByDateRange(self, start_date=None, end_date=None, transaction_type=None, phone_number=None, method: str = "moncash")`
+
+    - Parameters:
+
+        - start_date (optional): Start date for the query (YYYY-MM-DD).
+        - end_date (optional): End date for the query (YYYY-MM-DD).
+        - transaction_type (optional): Filter by transaction type.
+        - phone_number (optional): Filter by phone number.
+        - method (str, optional): Payment method to use. Defaults to `moncash`.
+
+    - Returns:
+
+        - dict: The response data from the API if the request is successful.
+
+    - Raises:
+
+        - APINotAuthenticated: If the authentication fails (401 status code).
+        - APINotAuthorized: If authorization fails (403 status code).
+        - LogApayException: For server errors (>= 400 status codes).
+
+
+Retrieve Prefunds by Date Range.
+
+- `getPrefundsByDateRange(self, start_date=None, end_date=None)`
+
+    - Parameters:
+
+        - start_date (optional): Start date for the query (YYYY-MM-DD).
+        - end_date (optional): End date for the query (YYYY-MM-DD).
+
+    - Returns:
+
+        - dict: The response data from the API if the request is successful.
+
+    - Raises:
+
+        - APINotAuthenticated: If the authentication fails (401 status code).
+        - APINotAuthorized: If authorization fails (403 status code).
+        - LogApayException: For server errors (>= 400 status codes).
+
+
+Retrieve Application Details.
+
+- `getApplicationDetails(self, include_transactions=True)`
+
+    - Parameters:
+
+        - include_transactions (bool, optional): Include recent transactions in the response. Defaults to `True`.
+
+    - Returns:
+
+        - dict: The response data from the API if the request is successful.
+
+    - Raises:
+
+        - APINotAuthenticated: If the authentication fails (401 status code).
+        - APINotAuthorized: If authorization fails (403 status code).
+        - LogApayException: For server errors (>= 400 status codes).
+
 
 ### Usage Example
 
@@ -151,7 +215,11 @@ api_client = LogapayAPI(token="your_api_token")
 
 # Create a payment
 try:
-    payment_response = api_client.payment(amount=100.0, orderId="order123")
+    payment_response = api_client.payment(
+        amount=100.0,
+        orderId="order123",
+        method="moncash",
+    )
     print(payment_response.get_response())
 except APINotAuthenticated:
     print("Authentication failed.")
@@ -164,7 +232,12 @@ except Exception as e:
 
 # Transfer money
 try:
-    transfer_response = api_client.transfer(amount=50.0, receiver="receiver_id", desc="Payment for services")
+    transfer_response = api_client.transfer(
+        amount=50.0,
+        receiver="receiver_id",
+        desc="Payment for services",
+        method="moncash",
+    )
     print(transfer_response)
 except APINotAuthenticated:
     print("Authentication failed.")
@@ -182,6 +255,7 @@ try:
         start_date="2025-05-04",
         end_date="2025-05-05",
         transaction_type="Deposit",
+        method="moncash",
         
     )  
     print("Succès ! Résultats :")
@@ -597,6 +671,3 @@ v1/list-prefund?start_date=2025-05-04&end_date=2025-05-05
 | 500  | Erreur serveur interne   |
 
 ---
-
-
-

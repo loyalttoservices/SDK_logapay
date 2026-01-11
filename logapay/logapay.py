@@ -38,10 +38,10 @@ class LogapayAPI:
             "Content-Type": "application/json",
         }
 
-    def payment(self, amount: float, orderId: str):
+    def payment(self, amount: float, orderId: str, method: str = "moncash"):
         response = requests.post(
             self._base + self.CREATE_URL,
-            json={"amount": amount, "orderId": orderId},
+            json={"amount": amount, "orderId": orderId, "payment_method": method},
             headers=self.headers,
         )
         status_code = response.status_code
@@ -67,10 +67,15 @@ class LogapayAPI:
         else:
             return PaymentResponse(data=data)
 
-    def transfer(self, amount: float, receiver: str, desc: str = ""):
+    def transfer(self, amount: float, receiver: str, desc: str = "", method: str = "moncash"):
         response = requests.post(
             self._base + self.TRANSFER_URL,
-            json={"amount": amount, "receiver": receiver, "desc": desc},
+            json={
+                "amount": amount,
+                "receiver": receiver,
+                "desc": desc,
+                "payment_method": method,
+            },
             headers=self.headers,
         )
         status_code = response.status_code
@@ -141,8 +146,14 @@ class LogapayAPI:
 
 
 
-    def getTransactionsByDateRange(self, start_date=None, end_date=None, 
-                             transaction_type=None, phone_number=None):
+    def getTransactionsByDateRange(
+        self,
+        start_date=None,
+        end_date=None,
+        transaction_type=None,
+        phone_number=None,
+        method: str = "all",
+    ):
         """
         Récupère les transactions dans une plage de dates avec des filtres optionnels
         """
@@ -160,6 +171,8 @@ class LogapayAPI:
             params['type'] = transaction_type
         if phone_number:
             params['number'] = phone_number
+        if method:
+            params['payment_method'] = method
         
         try:
             response = requests.get(
