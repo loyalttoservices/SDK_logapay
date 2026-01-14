@@ -103,9 +103,9 @@ class LogapayAPI:
         
 
     def retrievePayment(self, moncashId=None, moncashOrderId=None, natcashId=None, natcashReferenceId=None, transactionId=None):
-        if moncashId is None and moncashOrderId is None and transactionId is None:
+        if moncashId is None and moncashOrderId is None and natcashId is None and transactionId is None:
             raise LogApayException(
-                "Provide one of 'moncashOrderId', 'transactionId', 'moncashId'"
+                "Provide one of 'moncashOrderId', 'transactionId', 'moncashId', 'natcashId'"
             )
 
         if moncashId:
