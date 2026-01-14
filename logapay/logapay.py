@@ -103,54 +103,37 @@ class LogapayAPI:
         
 
     def retrievePayment(self, moncashId=None, moncashOrderId=None, natcashId=None, natcashReferenceId=None, transactionId=None):
-        if (
-            moncashId is None
-            and moncashOrderId is None
-            and natcashId is None
-            and natcashReferenceId is None
-            and transactionId is None
-        ):
+        if all(v is None for v in (moncashId, moncashOrderId, natcashId, natcashReferenceId, transactionId)):
             raise LogApayException(
                 "Provide one of 'moncashOrderId', 'transactionId', 'moncashId', 'natcashId', 'natcashReferenceId'"
             )
     
-        params = None
-    
-        if moncashId is not None:
+        if natcashId is not None:
+            params = {"natcashId": natcashId}
+        elif moncashId is not None:
             params = {"moncashId": moncashId}
         elif moncashOrderId is not None:
             params = {"moncashOrderId": moncashOrderId}
-        elif natcashId is not None:
-            params = {"natcashId": natcashId}
         elif natcashReferenceId is not None:
             params = {"natcashReferenceId": natcashReferenceId}
-        elif transactionId is not None:
+        else:
             params = {"transactionId": transactionId}
     
-        response = requests.get(
-            self._base + self.RETRIEVORDERPAYMENT_URL,
-            params=params,
-            headers=self.headers,
-        )
+        response = requests.get(self._base + self.RETRIEVORDERPAYMENT_URL, params=params, headers=self.headers)
     
         status_code = response.status_code
         content_type = response.headers.get("Content-Type", "")
     
-        if "application/json" in content_type:
-            data = response.json()
-        else:
-            data = {"status": status_code, "detail": response.text}
-    
+        data = response.json() if "application/json" in content_type else {"status": status_code, "detail": response.text}
         detail = data.get("detail", "")
     
         if 400 <= status_code <= 499:
             _status_code = data.get("status", status_code)
             if _status_code == 401:
                 raise APINotAuthenticated(detail)
-            elif _status_code == 403:
+            if _status_code == 403:
                 raise APINotAuthorized(detail)
-            else:
-                raise LogApayException(detail)
+            raise LogApayException(detail)
     
         if 500 <= status_code <= 599:
             raise LogApayException(detail)
