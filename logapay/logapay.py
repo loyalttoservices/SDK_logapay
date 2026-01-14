@@ -113,35 +113,37 @@ class LogapayAPI:
             raise LogApayException(
                 "Provide one of 'moncashOrderId', 'transactionId', 'moncashId', 'natcashId', 'natcashReferenceId'"
             )
-
-        if moncashId:
+    
+        params = None
+    
+        if moncashId is not None:
             params = {"moncashId": moncashId}
-        elif moncashOrderId:
+        elif moncashOrderId is not None:
             params = {"moncashOrderId": moncashOrderId}
-        elif natcashId:
+        elif natcashId is not None:
             params = {"natcashId": natcashId}
-        elif natcashReferenceId:
+        elif natcashReferenceId is not None:
             params = {"natcashReferenceId": natcashReferenceId}
-        elif transactionId:
+        elif transactionId is not None:
             params = {"transactionId": transactionId}
-
+    
         response = requests.get(
             self._base + self.RETRIEVORDERPAYMENT_URL,
             params=params,
             headers=self.headers,
         )
-        
+    
         status_code = response.status_code
         content_type = response.headers.get("Content-Type", "")
-
+    
         if "application/json" in content_type:
             data = response.json()
         else:
             data = {"status": status_code, "detail": response.text}
-
+    
         detail = data.get("detail", "")
-
-        if status_code >= 400 and status_code <= 499:
+    
+        if 400 <= status_code <= 499:
             _status_code = data.get("status", status_code)
             if _status_code == 401:
                 raise APINotAuthenticated(detail)
@@ -149,10 +151,12 @@ class LogapayAPI:
                 raise APINotAuthorized(detail)
             else:
                 raise LogApayException(detail)
-        elif status_code >= 500 and status_code <= 599:
+    
+        if 500 <= status_code <= 599:
             raise LogApayException(detail)
-        else:
-            return data
+    
+        return data
+
 
 
 
