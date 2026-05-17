@@ -21,6 +21,7 @@ class LogapayAPI:
 
     BASE_ENDPOINT = "https://logapay.net"
     BASE_ENDPOINT_TEST = "http://localhost:8000"
+    DEFAULT_TIMEOUT = 60
 
     TRANSFER_URL = "/v1/transfer"
     CREATE_URL = "/v1/create"
@@ -28,11 +29,12 @@ class LogapayAPI:
     LIST_TRANSACTION_URL="/v1/list-transactions"
     PREFUND_LIST="/v1/list-prefund"
     APPLICATION="/v1/application"
-    def __init__(self, token: str, debug=False) -> None:
+    def __init__(self, token: str, debug=False, timeout: int | float = DEFAULT_TIMEOUT) -> None:
         self._token = token
         self._base = (
             LogapayAPI.BASE_ENDPOINT_TEST if debug else LogapayAPI.BASE_ENDPOINT
         )
+        self.timeout = timeout
         self.headers = {
             "Authorization": "token " + self._token,
             "Content-Type": "application/json",
@@ -43,7 +45,8 @@ class LogapayAPI:
             self._base + self.CREATE_URL,
             json={"amount": amount, "orderId": orderId, "payment_method": method},
             headers=self.headers,
-        )
+                    timeout=self.timeout,
+)
         status_code = response.status_code
         content_type = response.headers.get("Content-Type", "")
 
@@ -77,7 +80,8 @@ class LogapayAPI:
                 "payment_method": method,
             },
             headers=self.headers,
-        )
+                    timeout=self.timeout,
+)
         status_code = response.status_code
         content_type = response.headers.get("Content-Type", "")
 
@@ -119,7 +123,7 @@ class LogapayAPI:
         else:
             params = {"transactionId": transactionId}
     
-        response = requests.get(self._base + self.RETRIEVORDERPAYMENT_URL, params=params, headers=self.headers)
+        response = requests.get(self._base + self.RETRIEVORDERPAYMENT_URL, params=params, headers=self.headers, timeout=self.timeout)
     
         status_code = response.status_code
         content_type = response.headers.get("Content-Type", "")
@@ -176,7 +180,8 @@ class LogapayAPI:
                 self._base + self.LIST_TRANSACTION_URL,
                 params=params,
                 headers=self.headers,
-               
+                    timeout=self.timeout,
+       
             )
             
             # Gestion de la réponse
@@ -270,7 +275,8 @@ class LogapayAPI:
                 self._base + self.APPLICATION,
                 params=params,
                 headers=self.headers,
-               
+                    timeout=self.timeout,
+       
             )
             
             # Gestion de la réponse
